@@ -1,24 +1,6 @@
-// {Name: Hello_World}
-// {Description: Hello World example of the Alan Platform functionality: intent() / play() / user- and pre-defined slots / contexts}
-
-// Welcome to the Alan Platform.
-// This example will introduce you to the main principles of Alan scripts and teach you how to create basic voice commands for your application.
-// Other examples will cover more advanced commands and script logic.
-//
-// Let's start with a simple command.
-// To define a voice command, we will use the 'intent()' function (https://alan.app/docs/server-api/commands-and-responses#intent).
-// Responses can be played back to the user with the 'play()' function (https://alan.app/docs/server-api/commands-and-responses#play).
-
 intent('Hello world', p => {
     p.play('Hi there');
 });
-
-// Try activating the button in the bottom right corner and saying "Hello world".
-// You will hear "Hi there" as a response. Exactly as we defined previously.
-// This was a voice interaction. You can also use the Debugging Chat, try typing in the same command - the result should be the same.
-
-// You can use multiple patterns (https://alan.app/docs/server-api/patterns) in a single intent.
-// This will allow you to have the same response played or action taken for different user inputs.
 
 intent(
     'Who\'s there',
@@ -30,95 +12,6 @@ intent(
         );
     },
 );
-
-// Try: "Who's there" or "What's your name".
-// Notice that the matched intent is different this time (the input bubble has a link to line number 23).
-
-// You can also pass a list of patterns to the intent function.
-const intentPatterns = [
-    'What is your favorite food',
-    'What food do you like',
-];
-
-intent(intentPatterns, p => {
-    p.play('CPU time, yammy!');
-});
-
-// Try: "What is your favorite food" or "What food do you like".
-
-// Notice that the patterns that we are using are quite similar sometimes.
-// In this case, alternatives might be used in them (https://alan.app/docs/server-api/patterns#patterns-with-alternatives).
-// Alternative sets are defined as (alt_1|alt_2|alt_n).
-
-intent('(I will have|Get me) a coffee, please', p => {
-    p.play('Sorry, I don\'t have hands to brew it.');
-});
-
-// Try: "I will have a coffee, please" or "Get me a coffee, please".
-
-// You can define the alternative set to be optional (https://alan.app/docs/server-api/patterns#optional-alternatives).
-
-intent('(Start|begin|take|) survey', p => {
-    p.play('(Sure.|OK.|) Starting a customer survey.');
-});
-
-// Try: "Survey" and "Start survey".
-// Notice that alternatives might also be used in responses.
-// Response alternatives will take one of each set at random.
-// In this example, possible responses are:
-// - "Sure. Starting a customer survey."
-// - "OK. Starting a customer survey."
-// - "Starting a customer survey."
-
-// Sometimes it is impossible to create a single pattern that will cover all possible variations and will not be overfit with meaningless combinations.
-// Try to avoid this by using all that is described above. You can have multiple patterns with multiple alternative sets (strict or optional).
-
-intent(
-    '(How is|what is) the (weather|temperature) (today|)',
-    'Today\'s forecast',
-    p => {
-        p.play(
-            '(It is|Feels|) (great|awesome)!',
-            'Rainy, windy, and cold. (A total mess!|)',
-        );
-    },
-);
-
-// Try: "How is the weather today", "Today's forecast", "What is the temperature".
-
-// You can also use more than one 'play()'.
-// In this case, responses will be played one after another.
-
-intent('Let\'s play hide and seek', p => {
-    p.play('Sure.');
-    p.play('I\'ll count.');
-    p.play('One');
-    p.play('Two');
-    p.play('Three');
-    p.play('Found you!');
-});
-
-// Try: "Let's play hide and seek".
-
-// Parts of the user input might be captured using slots (https://alan.app/docs/server-api/slots).
-// Later, such slots and their values can be used to differ the logic or give meaningful responses to the user.
-// Slots are defined as $(SLOT_NAME alt1|alt2|alt_n).
-
-intent('(I want|get me|add) a $(ITEM notebook|cellphone)', p => {
-    p.play('Your order is: $(ITEM). It will be delivered within the next 30 minutes.');
-});
-
-// Try: "I want a notebook" or "Add a cellphone".
-
-// Every slot is an object and has the '.value' field. This field contains the user input exactly as the user said it.
-// You can access slot fields with 'p.SLOT_NAME'.
-// To use them in a string, you should define a string using the ` symbol and pass a desired slot field in ${}.
-
-intent('I want my walls to be $(COLOR green|blue|orange|yellow|white)', p => {
-    p.play(`Mmm, ${p.COLOR.value}. Nice, love it!`);
-});
-
-// Try: "I want my walls to be green" or "I want my walls to be orange".
 
 // There are many predefined slots powered by our Named Entity Recognition (NER) system.
 // For them, you don't need to define alternatives and instead you just define the type of the NER slot.
@@ -151,16 +44,6 @@ intent('What is $(DATE)', p => {
 // This array will be named as the predefined slot appended by the '_' symbol.
 // The same logic applies to user-defined slots.
 // In patterns, the '_' symbol might be used as a pluralizer if added after a word. It means that this word might be used in both singular and plural forms.
-
-intent('Add $(NUMBER) $(INSTRUMENT trumpet_|guitar_|violin_) and $(NUMBER) $(INSTRUMENT trumpet_|guitar_|violin_)', p => {
-    console.log('Numbers array:', p.NUMBER_);
-    console.log('Instruments array:', p.INSTRUMENT_);
-    p.play(`The first position of your order is: ${p.NUMBER_[0].number} ${p.INSTRUMENT_[0].value}`);
-    p.play(`The second position of your order is: ${p.NUMBER_[1].number} ${p.INSTRUMENT_[1].value}`);
-});
-
-// Try: "Add two guitars and one violin" or "Add five trumpets and three guitars".
-// In this intent, we also use the 'console.log()' function. The output of this function will be printed into the Info logs.
 
 // Just like in real world conversations, in voice scripts some user commands may have meaning only within a context.
 // On the Alan Platform you can define such contexts (https://alan.app/docs/server-api/contexts#defining-contexts).
@@ -233,18 +116,25 @@ intent('What is on the menu', p => {
 // Try: "What is on the menu" -> "Get me a pizza" -> "Yes" or "No".
 
 // Questions to help with script/app usage
-question(
+intent(
+    'What is the name of this (app|script|project)',
     'What does this (app|script|project) do',
     'What is this (app|script|project|)',
-    'Why do I need this',
-    reply('This is a Hello World Example project. Its main purpose is to get you introduced to basics of the Alan Platform!'),
+    'Why do I need this', p=> {
+    p.play('This is a Personal Assistant Mobile Application named AVA. Its main purpose is to make the daily tasks of user simpler!')}
 );
 
-question(
+intent(
     'How does this work',
     'How to use this',
     'What can I do here',
     'What (should I|can I|to) say',
-    'What commands are available',
-    reply('Just say: (hello world|what is the weather today|what is tomorrow|Add two guitars and one violin).'),
+    'What commands are available', p=> {
+    p.play('You can ask queries related to Date, Time, News, Location and Weather.')}
+);
+
+intent(
+    'Who (are|developed the|this developers| of| this| app|application)', p=>{
+    p.play('AVA is developed by Vidya Rupak and Aryan Gupta')
+    }
 );
