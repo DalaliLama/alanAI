@@ -6,7 +6,7 @@ intent(`(Navigate|Take|Go|Show me| to|) FAQ`, p => {
         p.play({command: 'navigation', route: 'faq'});
         p.play(`Navigating to FAQ`);
 });
-intent(`(Navigate|Take|Go|Show me| to|) home`, p => {
+intent(`(Navigate|Take|Go|Show me| to|) homescreen`, p => {
         p.play({command: 'navigation', route: 'home'});
         p.play(`Navigating back to home`);
 });
